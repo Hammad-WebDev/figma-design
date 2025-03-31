@@ -1,46 +1,21 @@
 import React, { useState } from 'react'
+import { useForm } from "react-hook-form";
 
 const Contact = () => {
-    const [form, setForm] = useState({ name: "", email: "", message: "" })
-    const [error, setError] = useState({})
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm();
 
-        let newErrors = {};
-        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-        if (!form.name.trim()) {
-            newErrors.name = "name is required";
-        } else if (form.name.length < 3) {
-            newErrors.name = "minimum length is 3";
-        } else if (form.name.length > 20) {
-            newErrors.name = "maximum length is 20";
-        } else if (/\d/.test(form.name)) {
-            newErrors.name = "numbers not allowed";
-        }
-
-        if (!form.email.trim()) {
-            newErrors.email = "email is required";
-        } else if (!emailRegex.test(form.email)) {
-            newErrors.email = "please enter valid email";
-        }
-
-        if (!form.message.trim()) {
-            newErrors.message = "message is required";
-        }
-
-        setError(newErrors);
-
-        if (Object.keys(newErrors).length === 0) {
-            alert(`form submit successfully 
-                   name: ${form.name} 
-                   email: ${form.email} 
-                   message: ${form.message}`);
-            setForm({ name: "", email: "", message: "" })
-        }
-    };
-
+    const onSubmit = (data) => {
+        let cnfrm = confirm(`
+            name: ${data.name}
+            email: ${data.email}
+            message: ${data.messageInput}
+            `);
+            
+            if (cnfrm) {
+                reset()
+            }
+    }
 
 
     return <>
@@ -53,7 +28,7 @@ const Contact = () => {
             <div className="contact-card relative overflow-hidden flex items-center bg-[#F3F3F3] mt-[7%] px-[7%] sm:py-[6%] py-[8%] md:rounded-[45px] rounded-4xl">
 
                 <div className="Form md:w-[50%] w-full max-sm:text-sm">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="radio-btns flex items-center mb-7">
                             <input className='mr-3 sm:scale-170 scale-150' type="radio" id='say' name='radio' defaultChecked />
                             <label className='sm:mr-7 mr-[25%]' htmlFor="say">Say Hi</label>
@@ -69,10 +44,15 @@ const Contact = () => {
                                     id='name'
                                     type="text"
                                     placeholder='Name'
-                                    value={form.name}
-                                    onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                                    {...register("name", {
+                                        required: "name is required",
+                                        minLength: { value: 3, message: "minimum length is 3" },
+                                        maxLength: { value: 20, message: "maximum length is 20" },
+                                        pattern: { value: /^[^0-9]+$/, message: "numbers are not allowed" }
+                                    })}
+                                />
 
-                                {error.name && <div className="absolute bottom-[-23%] left-7 text-red-500 text-sm">{error.name}</div>}
+                                {errors.name && <div className="absolute bottom-[-23%] left-7 text-red-500 text-sm">{errors.name.message}</div>}
                             </div>
 
                             <div className="Email flex flex-col relative">
@@ -81,11 +61,13 @@ const Contact = () => {
                                     id='email'
                                     type="email"
                                     placeholder='Email'
-                                    value={form.email}
-                                    onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                                    {...register("email", {
+                                        required: "email is required",
+                                        pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: "please enter valid email" }
+                                    })}
+                                />
 
-                                {error.email && <div className="absolute bottom-[-23%] left-7 text-red-500 text-sm">{error.email}</div>}
-
+                                {errors.email && <div className="absolute bottom-[-23%] left-7 text-red-500 text-sm">{errors.email.message}</div>}
                             </div>
 
                             <div className="Message flex flex-col relative">
@@ -93,12 +75,12 @@ const Contact = () => {
                                 <textarea className='resize-none bg-white rounded-[14px] border px-7 py-3.5 mt-2 sm:h-[170px] h-28'
                                     id="message"
                                     placeholder='Message'
-                                    value={form.message}
-                                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                                    {...register("messageInput", {
+                                        required: "message is required",
+                                        minLength: { value: 5, message: "minimum length is 5" }
+                                    })}
                                 ></textarea>
-
-                                {error.message && <div className="absolute bottom-[-13%] left-7 text-red-500 text-sm">{error.message}</div>}
-
+                                {errors.messageInput && <div className="absolute bottom-[-13%] left-7 text-red-500 text-sm">{errors.messageInput.message}</div>}
                             </div>
 
                             <div className="submit-btn mt-3">

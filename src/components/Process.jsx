@@ -46,7 +46,7 @@ const Process = () => {
 
             <div className="card-container mt-[7%]">
                 {data.map((data, index) => {
-                    return <div key={index} className={`card sm:h-[12vw] h-[17vw] w-full mb-7 px-[5%] py-[3%] rounded-[45px] border shadow-[0px_5px_0px_0px_black] transition-all duration-500 ${cardIndex === index ? "bg-[#B9FF66] sm:h-[23vw] h-[70vw]" : "bg-[#F3F3F3]"}`}>
+                    return <div key={index} className={`card sm:h-[12vw] h-[17vw] max-sm:min-h-[20vw] w-full mb-7 md:px-[5%] md:py-[3%] sm:p-[3%] p-[5%] rounded-[45px] border shadow-[0px_5px_0px_0px_black] transition-all duration-500 ${cardIndex === index ? "bg-[#B9FF66] sm:h-[23vw] h-[70vw]" : "bg-[#F3F3F3]"}`}>
                         <div className="content flex justify-between items-center w-full font-medium">
                             <div className="text w-[65%] flex items-center gap-5">
                                 <h2 className='sm:text-[4.3vw] text-[7vw]'>0{index + 1}</h2>
